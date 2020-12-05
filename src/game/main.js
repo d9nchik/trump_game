@@ -1,6 +1,6 @@
-import Deck from "react-poker";
-import "react-poker/dist/styles.css"
+// import Deck from "react-poker/dist/react-poker";
 import {Component} from "react/cjs/react.production.min";
+import DeckContainer from "../cardComponents/Deck";
 
 const range = (start, count) =>
     Array.apply(0, Array(count)).map((element, index) => {
@@ -84,7 +84,7 @@ class AppContainer extends Component {
 
         if (board.length === 0) {
             this.dealFlop();
-            return;
+            // return;
         }
 
         if (board.length === 5) {
@@ -98,15 +98,15 @@ class AppContainer extends Component {
         const { board } = this.state;
 
         return (
-            <div style={{ left: "10vw", top: "10vh", position: "absolute" }}>
+            <div style={{left: "10vw", top: "10vh", position: "absolute"}}>
                 <button
-                    style={{ padding: "1.5em", margin: "2em" }}
+                    style={{padding: "1.5em", margin: "2em"}}
                     onClick={this.progressDeal}
                 >
                     Deal
                 </button>
-                <Deck
-                    board={["3s", "Qh", "As"]}
+                <DeckContainer
+                    board={board}
                     boardXoffset={375} // X axis pixel offset for dealing board
                     boardYoffset={200} // Y axis pixel offset for dealing board
                     size={200} // card height in pixels
