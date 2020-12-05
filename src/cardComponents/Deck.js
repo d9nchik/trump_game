@@ -56,22 +56,41 @@ const getInitialDeck = () =>
 class DeckContainer extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {board: [], deck: []};
+    this.state = {board: [], deck: [], opponentBoard: []};
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.board) {
       this.setState({board: nextProps.board});
     }
+    if (nextProps.opponentBoard) {
+      this.setState({opponentBoard: nextProps.opponentBoard});
+    }
   }
 
   render() {
-    const {board} = this.state;
+    const {board, opponentBoard} = this.state;
     const {size, flipOnHover, boardYoffset, boardXoffset} = this.props;
 
     return (
         <div>
           {getInitialDeck().map((card, i) => {
+            if (opponentBoard.includes(card.rank + card.suit)) {
+              return (
+                  <CardContainer
+                      index={i}
+                      key={card.rank + card.suit}
+                      board={opponentBoard}
+                      card={card}
+                      faceDown={false}
+                      size={size}
+                      boardXoffset={boardXoffset} // board x offset relative to stack
+                      boardYoffset={-boardYoffset} // board y offset relative to stack
+                      mapXYZ={stack}
+                      flipOnHover={false}
+                  />
+              )
+            }
             return (
                 <CardContainer
                     index={i}

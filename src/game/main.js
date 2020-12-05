@@ -84,7 +84,7 @@ class AppContainer extends Component {
 
         if (board.length === 0) {
             this.dealFlop();
-            // return;
+            return;
         }
 
         if (board.length === 5) {
@@ -107,6 +107,7 @@ class AppContainer extends Component {
                 </button>
                 <DeckContainer
                     board={board}
+                    opponentBoard={['5c']}
                     boardXoffset={375} // X axis pixel offset for dealing board
                     boardYoffset={200} // Y axis pixel offset for dealing board
                     size={200} // card height in pixels
