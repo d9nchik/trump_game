@@ -59,7 +59,7 @@ class DeckContainer extends PureComponent {
     this.state = {board: [], deck: []};
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (nextProps.board) {
       this.setState({board: nextProps.board});
     }
