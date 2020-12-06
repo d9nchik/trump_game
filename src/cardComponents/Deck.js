@@ -56,7 +56,7 @@ const getInitialDeck = () =>
 class DeckContainer extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {board: [], deck: [], opponentBoard: []};
+    this.state = {board: [], deck: [], opponentBoard: [], myBoard: []};
   }
 
   componentWillReceiveProps(nextProps) {
@@ -66,10 +66,13 @@ class DeckContainer extends PureComponent {
     if (nextProps.opponentBoard) {
       this.setState({opponentBoard: nextProps.opponentBoard});
     }
+    if (nextProps.myBoard) {
+      this.setState({myBoard: nextProps.myBoard});
+    }
   }
 
   render() {
-    const {board, opponentBoard} = this.state;
+    const {board, opponentBoard, myBoard} = this.state;
     const {size, flipOnHover, boardYoffset, boardXoffset} = this.props;
 
     return (
@@ -85,6 +88,21 @@ class DeckContainer extends PureComponent {
                       faceDown={false}
                       size={size}
                       boardXoffset={boardXoffset} // board x offset relative to stack
+                      boardYoffset={-boardYoffset} // board y offset relative to stack
+                      mapXYZ={stack}
+                      flipOnHover={false}
+                  />
+              )
+            } else if (board.includes(card.rank + card.suit)) {
+              return (
+                  <CardContainer
+                      index={i}
+                      key={card.rank + card.suit}
+                      board={board}
+                      card={card}
+                      faceDown={true}
+                      size={size}
+                      boardXoffset={boardXoffset} // board x offset relative to stack
                       boardYoffset={0} // board y offset relative to stack
                       mapXYZ={stack}
                       flipOnHover={false}
@@ -95,7 +113,7 @@ class DeckContainer extends PureComponent {
                 <CardContainer
                     index={i}
                     key={card.rank + card.suit}
-                    board={board}
+                    board={myBoard}
                     card={card}
                     faceDown={true}
                     size={size}
