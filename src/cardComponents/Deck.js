@@ -85,7 +85,7 @@ class DeckContainer extends PureComponent {
                       faceDown={false}
                       size={size}
                       boardXoffset={boardXoffset} // board x offset relative to stack
-                      boardYoffset={-boardYoffset} // board y offset relative to stack
+                      boardYoffset={0} // board y offset relative to stack
                       mapXYZ={stack}
                       flipOnHover={false}
                   />
@@ -99,8 +99,8 @@ class DeckContainer extends PureComponent {
                     card={card}
                     faceDown={true}
                     size={size}
-                    boardXoffset={boardXoffset} // board x offset relative to stack
-                    boardYoffset={boardYoffset} // board y offset relative to stack
+                    boardXoffset={-boardXoffset / 2} // board x offset relative to stack
+                    boardYoffset={2 * boardYoffset} // board y offset relative to stack
                     mapXYZ={stack}
                     flipOnHover={flipOnHover}
                 />

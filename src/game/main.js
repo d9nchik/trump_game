@@ -87,7 +87,7 @@ class AppContainer extends Component {
             return;
         }
 
-        if (board.length === 5) {
+        if (board.length === 15) {
             this.newRound();
         } else {
             this.dealCard();
