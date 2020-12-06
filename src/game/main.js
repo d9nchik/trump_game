@@ -8,7 +8,6 @@ class AppContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {gameState: new GameState('c', 's')};
-        this.update = this.update.bind(this);
     }
 
     componentDidMount() {
@@ -19,7 +18,7 @@ class AppContainer extends Component {
         const {player2, player1, board} = this.state.gameState;
 
         return (
-            <div style={{left: "10vw", top: "10vh", position: "absolute"}}>
+            <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
                 <DeckContainer
 
                     myBoard={player1}
