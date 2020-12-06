@@ -20,7 +20,6 @@ function shuffle(array) {
 
 const suits = ["d", "c", "h", "s"];
 const ranks = [
-    "A",
     "2",
     "3",
     "4",
@@ -32,13 +31,16 @@ const ranks = [
     "10",
     "J",
     "Q",
-    "K"
+    "K",
+    "A"
 ];
 
-const getInitialDeck = () =>
-    ranks
-        .map(r => suits.map(s => ({rank: r, suit: s})))
-        .reduce((prev, curr) => prev.concat(curr));
+const getDeck = () =>
+    shuffle(
+        ranks
+            .map(r => suits.map(s => r + s))
+            .reduce((prev, curr) => prev.concat(curr))
+    );
 
 export class GameState {
     constructor(player1Suit, player2Suit) {
@@ -49,24 +51,86 @@ export class GameState {
         this.player2 = [];
         this.player1Suit = player1Suit;
         this.player2Suit = player2Suit;
-        this.deck = getInitialDeck();
+        this.deck = getDeck();
         this.out = [];
         this.board = [];
         this.isTurnOfFirst = true;
+        this.isPassed = false;
         this.giveCards();
     }
 
     giveCards() {
         const [first, second] = this.isTurnOfFirst ? [this.player1, this.player2] : [this.player2, this.player1];
-        while (first.length < 6) {
+        while (first.length < 6 && this.deck.length > 0) {
             first.push(this.deck.pop());
         }
-        while (second.length < 6) {
+        while (second.length < 6 && this.deck.length > 0) {
             second.push(this.deck.pop());
         }
     }
 
-    makeTurn() {
+    isAttackerMiniTurn() {
+        return this.board.length % 2 === 0 || this.isPassed;
+    }
 
+    makeTurn(card) {
+        let isAttackerMiniTurn = this.isAttackerMiniTurn();
+        const isFirstPlayerMiniTurn = (this.isTurnOfFirst && isAttackerMiniTurn) || (!this.isTurnOfFirst && !isAttackerMiniTurn);
+        const [playerDeck, playerSuit] = isFirstPlayerMiniTurn ? [this.player1, this.player1Suit] : [this.player2, this.player2Suit];
+
+        if (!isTurnValid(this.board)) {
+            throw new Error('Your turn is not valid');
+        }
+
+        playerDeck.splice(playerDeck.indexOf(card), 1);
+        this.board.push(card);
+        if (!isAttackerMiniTurn && playerDeck.length === 0) {
+            this.endRound();
+        }
+
+        function isTurnValid(board) {
+            if (playerDeck.includes(card)) {
+                if (isAttackerMiniTurn) {
+                    return board.map(card => card[0]).includes(card[0]);
+                } else {
+                    const opponentCard = board[board.length - 1];
+                    if (opponentCard[1] === card[1]) {
+                        return ranks.indexOf(card[0]) > ranks.indexOf(opponentCard[0])
+                    } else {
+                        return card[1] === playerSuit;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    pass() {
+        if (this.isAttackerMiniTurn()) {
+            this.endRound();
+        } else {
+            this.isPassed = true;
+        }
+    }
+
+    endRound() {
+        if (this.isPassed) {
+            if (this.isTurnOfFirst) {
+                this.player2.concat(this.board);
+            } else {
+                this.player1.concat(this.board);
+            }
+            this.isPassed = false;
+        } else {
+            this.out.concat(this.board);
+            this.isTurnOfFirst = !this.isTurnOfFirst;
+        }
+        this.board = [];
+
+        this.giveCards();
+    }
+
+    isEnd() {
+        return this.deck.length === 0 && (this.player1.length === 0 || this.player2.length === 0);
     }
 }
