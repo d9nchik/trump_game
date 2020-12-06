@@ -56,7 +56,10 @@ const getInitialDeck = () =>
 class DeckContainer extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {board: [], deck: [], opponentBoard: [], myBoard: []};
+    this.state = {
+      board: [], deck: [], opponentBoard: [], myBoard: [], makeTurn: card => {
+      }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -69,10 +72,13 @@ class DeckContainer extends PureComponent {
     if (nextProps.myBoard) {
       this.setState({myBoard: nextProps.myBoard});
     }
+    if (nextProps.makeTurn) {
+      this.setState({makeTurn: nextProps.makeTurn});
+    }
   }
 
   render() {
-    const {board, opponentBoard, myBoard} = this.state;
+    const {board, opponentBoard, myBoard, makeTurn} = this.state;
     const {size, flipOnHover, boardYoffset, boardXoffset} = this.props;
 
     return (
@@ -80,47 +86,52 @@ class DeckContainer extends PureComponent {
           {getInitialDeck().map((card, i) => {
             if (opponentBoard.includes(card.rank + card.suit)) {
               return (
-                  <CardContainer
-                      index={i}
-                      key={card.rank + card.suit}
-                      board={opponentBoard}
-                      card={card}
-                      faceDown={false}
-                      size={size}
-                      boardXoffset={boardXoffset} // board x offset relative to stack
-                      boardYoffset={-boardYoffset} // board y offset relative to stack
-                      mapXYZ={stack}
-                      flipOnHover={false}
-                  />
+                  <div onClick={() => makeTurn(card.rank + card.suit)}>
+                    <CardContainer
+                        index={i}
+                        key={card.rank + card.suit}
+                        board={opponentBoard}
+                        card={card}
+                        faceDown={false}
+                        size={size}
+                        boardXoffset={boardXoffset} // board x offset relative to stack
+                        boardYoffset={-boardYoffset} // board y offset relative to stack
+                        mapXYZ={stack}
+                        flipOnHover={false}
+                    />
+                  </div>
               )
-            } else if (board.includes(card.rank + card.suit)) {
+            }
+            if (myBoard.includes(card.rank + card.suit)) {
               return (
-                  <CardContainer
-                      index={i}
-                      key={card.rank + card.suit}
-                      board={board}
-                      card={card}
-                      faceDown={true}
-                      size={size}
-                      boardXoffset={boardXoffset} // board x offset relative to stack
-                      boardYoffset={0} // board y offset relative to stack
-                      mapXYZ={stack}
-                      flipOnHover={false}
-                  />
+                  <div onClick={() => makeTurn(card.rank + card.suit)}>
+                    <CardContainer
+                        index={i}
+                        key={card.rank + card.suit}
+                        board={myBoard}
+                        card={card}
+                        faceDown={false}
+                        size={size}
+                        boardXoffset={-boardXoffset / 2} // board x offset relative to stack
+                        boardYoffset={2 * boardYoffset} // board y offset relative to stack
+                        mapXYZ={stack}
+                        flipOnHover={flipOnHover}
+                    />
+                  </div>
               )
             }
             return (
                 <CardContainer
                     index={i}
                     key={card.rank + card.suit}
-                    board={myBoard}
+                    board={board}
                     card={card}
-                    faceDown={true}
+                    faceDown={false}
                     size={size}
-                    boardXoffset={-boardXoffset / 2} // board x offset relative to stack
-                    boardYoffset={2 * boardYoffset} // board y offset relative to stack
+                    boardXoffset={boardXoffset} // board x offset relative to stack
+                    boardYoffset={0} // board y offset relative to stack
                     mapXYZ={stack}
-                    flipOnHover={flipOnHover}
+                    flipOnHover={false}
                 />
             );
           })}

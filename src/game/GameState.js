@@ -91,7 +91,7 @@ export class GameState {
         function isTurnValid(board) {
             if (playerDeck.includes(card)) {
                 if (isAttackerMiniTurn) {
-                    return board.map(card => card[0]).includes(card[0]);
+                    return board.length === 0 || board.map(card => card[0]).includes(card[0]);
                 } else {
                     const opponentCard = board[board.length - 1];
                     if (opponentCard[1] === card[1]) {
@@ -116,9 +116,9 @@ export class GameState {
     endRound() {
         if (this.isPassed) {
             if (this.isTurnOfFirst) {
-                this.player2.concat(this.board);
+                this.player2 = this.player2.concat(this.board);
             } else {
-                this.player1.concat(this.board);
+                this.player1 = this.player1.concat(this.board);
             }
             this.isPassed = false;
         } else {
