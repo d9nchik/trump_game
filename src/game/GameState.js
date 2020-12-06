@@ -20,10 +20,6 @@ function shuffle(array) {
 
 const suits = ["d", "c", "h", "s"];
 const ranks = [
-    "2",
-    "3",
-    "4",
-    "5",
     "6",
     "7",
     "8",
@@ -94,10 +90,11 @@ export class GameState {
                     return board.length === 0 || board.map(card => card[0]).includes(card[0]);
                 } else {
                     const opponentCard = board[board.length - 1];
-                    if (opponentCard[1] === card[1]) {
-                        return ranks.indexOf(card[0]) > ranks.indexOf(opponentCard[0])
+                    if (opponentCard[opponentCard.length - 1] === card[card.length - 1]) {
+                        return ranks.indexOf(card.slice(0, card.length - 1)) > ranks.indexOf(
+                            opponentCard.slice(0, card.length - 1));
                     } else {
-                        return card[1] === playerSuit;
+                        return card[card.length - 1] === playerSuit;
                     }
                 }
             }

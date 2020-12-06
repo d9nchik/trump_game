@@ -16,8 +16,12 @@ class AppContainer extends Component {
     }
 
     makeTurn(card) {
-        this.state.gameState.makeTurn(card);
-        this.setState({});
+        try {
+            this.state.gameState.makeTurn(card);
+            this.setState({});
+        } catch (e) {
+            alert(e);
+        }
     }
 
     pass() {
@@ -26,8 +30,7 @@ class AppContainer extends Component {
     }
 
     render() {
-        const {player2, player1, board} = this.state.gameState;
-
+        const {player2, player1, board, out} = this.state.gameState;
         return (
             <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
                 <button onClick={this.pass}>Pass</button>
@@ -35,7 +38,7 @@ class AppContainer extends Component {
 
                     myBoard={player1}
                     opponentBoard={player2}
-                    // out={gameState.out}
+                    out={out}
                     makeTurn={card => this.makeTurn(card)}
                     board={board}
                     boardXoffset={375} // X axis pixel offset for dealing board

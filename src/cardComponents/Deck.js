@@ -34,10 +34,6 @@ const stack = i => ({
 const suits = ["d", "c", "h", "s"];
 const ranks = [
   "A",
-  "2",
-  "3",
-  "4",
-  "5",
   "6",
   "7",
   "8",
@@ -57,7 +53,7 @@ class DeckContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      board: [], deck: [], opponentBoard: [], myBoard: [], makeTurn: card => {
+      board: [], deck: [], opponentBoard: [], out: [], myBoard: [], makeTurn: card => {
       }
     };
   }
@@ -75,10 +71,13 @@ class DeckContainer extends PureComponent {
     if (nextProps.makeTurn) {
       this.setState({makeTurn: nextProps.makeTurn});
     }
+    if (nextProps.out) {
+      this.setState({out: nextProps.out})
+    }
   }
 
   render() {
-    const {board, opponentBoard, myBoard, makeTurn} = this.state;
+    const {board, opponentBoard, myBoard, makeTurn, out} = this.state;
     const {size, flipOnHover, boardYoffset, boardXoffset} = this.props;
 
     return (
@@ -119,6 +118,9 @@ class DeckContainer extends PureComponent {
                     />
                   </div>
               )
+            }
+            if (out.includes(card.rank + card.suit)) {
+              return (<div/>);
             }
             return (
                 <CardContainer
