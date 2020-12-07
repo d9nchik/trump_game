@@ -58,13 +58,13 @@ function makeSafeTurn(gameState, arrayOfCard) {
 
 function sortFunction([number1, suit1], [number2, suit2], suit) {
     if (suit1 === suit2) {
-        return number1 < number2 ? -1 : 1;
+        return ranks.indexOf(number1) < ranks.indexOf(number2) ? -1 : 1;
     }
     if (suit1 === suit) {
-        return -1;
-    }
-    if (suit2 === suit) {
         return 1;
     }
-    return number1 < number2 ? -1 : 1;
+    if (suit2 === suit) {
+        return -1;
+    }
+    return ranks.indexOf(number1) < ranks.indexOf(number2) ? -1 : 1;
 }

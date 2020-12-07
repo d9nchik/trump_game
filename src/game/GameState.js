@@ -96,8 +96,8 @@ export class GameState {
                 } else {
                     const opponentCard = board[board.length - 1];
                     if (opponentCard[opponentCard.length - 1] === card[card.length - 1]) {
-                        return ranks.indexOf(card.slice(0, card.length - 1)) > ranks.indexOf(
-                            opponentCard.slice(0, card.length - 1));
+                        return ranks.indexOf(opponentCard.slice(0, opponentCard.length - 1)) < ranks.indexOf(
+                            card.slice(0, card.length - 1));
                     } else {
                         return card[card.length - 1] === playerSuit;
                     }
