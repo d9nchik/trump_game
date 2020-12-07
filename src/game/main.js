@@ -19,17 +19,21 @@ class AppContainer extends Component {
     makeTurn(card) {
         try {
             this.state.gameState.makeTurn(card);
-            this.setState({});
         } catch (e) {
             alert(e);
         }
         if (!this.state.gameState.isFirstPlayerMiniTurn()) {
             makeTurn(this.state.gameState);
         }
+        this.forceUpdate();
+        this.setState({});
     }
 
     pass() {
         this.state.gameState.pass();
+        if (!this.state.gameState.isFirstPlayerMiniTurn()) {
+            makeTurn(this.state.gameState);
+        }
         this.setState({});
     }
 
@@ -40,11 +44,11 @@ class AppContainer extends Component {
                 <button onClick={this.pass}>Pass</button>
                 <DeckContainer
 
-                    myBoard={player1}
-                    opponentBoard={player2}
+                    myBoard={[...player1]}
+                    opponentBoard={[...player2]}
                     out={out}
                     makeTurn={card => this.makeTurn(card)}
-                    board={board}
+                    board={[...board]}
                     boardXoffset={375} // X axis pixel offset for dealing board
                     boardYoffset={200} // Y axis pixel offset for dealing board
                     size={200} // card height in pixels

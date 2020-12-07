@@ -85,28 +85,28 @@ class DeckContainer extends PureComponent {
           {getInitialDeck().map((card, i) => {
             if (opponentBoard.includes(card.rank + card.suit)) {
               return (
-                  <div onClick={() => makeTurn(card.rank + card.suit)}>
                     <CardContainer
                         index={i}
-                        key={card.rank + card.suit}
+                        // key={card.rank + card.suit}
                         board={opponentBoard}
                         card={card}
-                        faceDown={false}
+                        faceDown={true}
                         size={size}
                         boardXoffset={boardXoffset} // board x offset relative to stack
                         boardYoffset={-boardYoffset} // board y offset relative to stack
                         mapXYZ={stack}
                         flipOnHover={false}
                     />
-                  </div>
-              )
+              );
             }
             if (myBoard.includes(card.rank + card.suit)) {
               return (
-                  <div onClick={() => makeTurn(card.rank + card.suit)}>
+                  <div onClick={() => makeTurn(card.rank + card.suit)}
+                      // key={card.rank + card.suit}
+                  >
                     <CardContainer
                         index={i}
-                        key={card.rank + card.suit}
+                        // key={card.rank + card.suit}
                         board={myBoard}
                         card={card}
                         faceDown={false}
@@ -117,23 +117,39 @@ class DeckContainer extends PureComponent {
                         flipOnHover={flipOnHover}
                     />
                   </div>
-              )
+              );
             }
             if (out.includes(card.rank + card.suit)) {
               return (<div/>);
+            }
+            if (board.includes(card.rank + card.suit)) {
+              return (
+                  <CardContainer
+                      index={i}
+                      key={card.rank + card.suit}
+                      board={board}
+                      card={card}
+                      faceDown={false}
+                      size={size}
+                      boardXoffset={boardXoffset} // board x offset relative to stack
+                      boardYoffset={0} // board y offset relative to stack
+                      mapXYZ={stack}
+                      flipOnHover={true}
+                  />
+              );
             }
             return (
                 <CardContainer
                     index={i}
                     key={card.rank + card.suit}
-                    board={board}
+                    board={myBoard}
                     card={card}
-                    faceDown={false}
+                    faceDown={true}
                     size={size}
                     boardXoffset={boardXoffset} // board x offset relative to stack
-                    boardYoffset={0} // board y offset relative to stack
+                    boardYoffset={boardYoffset} // board y offset relative to stack
                     mapXYZ={stack}
-                    flipOnHover={false}
+                    flipOnHover={flipOnHover}
                 />
             );
           })}

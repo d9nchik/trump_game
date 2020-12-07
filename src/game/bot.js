@@ -21,7 +21,7 @@ const ranks = [
 
 function simpleTurn(gameState) {
     const suitSortFunction = (a, b) => sortFunction(a, b, gameState.player2Suit);
-    let ourCards = gameState.player2.map(card => [card.slice(0, card.legth - 1), card[card.legth - 1]]);
+    let ourCards = gameState.player2.map(card => [card.slice(0, card.length - 1), card[card.length - 1]]);
     if (gameState.isAttackerMiniTurn()) {
         if (gameState.board.length < 6) {
             if (gameState.board.length === 0) {
@@ -35,13 +35,13 @@ function simpleTurn(gameState) {
         } else {
             let notHighTrump = ourCards.filter(card => card[1] !== gameState.player2Suit || ranks.indexOf(card[0]) < ranks.indexOf('10'));
             notHighTrump.sort(suitSortFunction);
-            makeSafeTurn(notHighTrump);
+            makeSafeTurn(gameState, notHighTrump);
         }
     } else {
         //we defending
         let notHighTrump = ourCards.filter(card => card[1] !== gameState.player2Suit || ranks.indexOf(card[0]) < ranks.indexOf('Q'));
         notHighTrump.sort(suitSortFunction);
-        makeSafeTurn(notHighTrump);
+        makeSafeTurn(gameState, notHighTrump);
     }
 }
 
