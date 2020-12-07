@@ -69,9 +69,14 @@ export class GameState {
         return this.board.length % 2 === 0 || this.isPassed;
     }
 
+    isFirstPlayerMiniTurn() {
+        let isAttackerMiniTurn = this.isAttackerMiniTurn();
+        return (this.isTurnOfFirst && isAttackerMiniTurn) || (!this.isTurnOfFirst && !isAttackerMiniTurn);
+    }
+
     makeTurn(card) {
         let isAttackerMiniTurn = this.isAttackerMiniTurn();
-        const isFirstPlayerMiniTurn = (this.isTurnOfFirst && isAttackerMiniTurn) || (!this.isTurnOfFirst && !isAttackerMiniTurn);
+        const isFirstPlayerMiniTurn = this.isFirstPlayerMiniTurn();
         const [playerDeck, playerSuit] = isFirstPlayerMiniTurn ? [this.player1, this.player1Suit] : [this.player2, this.player2Suit];
 
         if (!isTurnValid(this.board)) {
@@ -103,6 +108,9 @@ export class GameState {
     }
 
     pass() {
+        if (this.board.length === 0) {
+            throw new Error("You can not pass!");
+        }
         if (this.isAttackerMiniTurn()) {
             this.endRound();
         } else {

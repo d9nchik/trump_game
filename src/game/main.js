@@ -2,6 +2,7 @@
 import {Component} from "react/cjs/react.production.min";
 import DeckContainer from "../cardComponents/Deck";
 import {GameState} from "./GameState";
+import {makeTurn} from "./bot";
 
 
 class AppContainer extends Component {
@@ -21,6 +22,9 @@ class AppContainer extends Component {
             this.setState({});
         } catch (e) {
             alert(e);
+        }
+        if (!this.state.gameState.isFirstPlayerMiniTurn()) {
+            makeTurn(this.state.gameState);
         }
     }
 
