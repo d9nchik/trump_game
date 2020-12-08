@@ -1,13 +1,13 @@
 import {Component} from "react/cjs/react.production.min";
 import DeckContainer from "../cardComponents/Deck";
-import {GameState} from "./GameState";
+import {getGameState} from "./GameState";
 import {makeTurn} from "./bot";
 
 
 class AppContainer extends Component {
     constructor(props) {
         super(props);
-        this.state = {gameState: new GameState('c', 's')};
+        this.state = {gameState: getGameState()};
         this.pass = this.pass.bind(this);
         this.restart = this.restart.bind(this);
     }
@@ -38,7 +38,7 @@ class AppContainer extends Component {
     }
 
     restart() {
-        this.setState({gameState: new GameState('c', 's')})
+        this.setState({gameState: getGameState()})
     }
 
     render() {

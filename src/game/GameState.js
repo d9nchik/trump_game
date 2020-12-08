@@ -90,7 +90,10 @@ export class GameState {
 
         playerDeck.splice(playerDeck.indexOf(card), 1);
         this.board.push(card);
-        this.message = `${!this.isFirstPlayerMiniTurn() ? 'First' : 'Second'} player has gone with card: '${card}'`;
+        this.message = <div>
+            <div>{`${!this.isFirstPlayerMiniTurn() ? 'First' : 'Second'} player has gone with card:`}</div>
+            <div>{`'${card}'`}</div>
+        </div>;
         if (!isAttackerMiniTurn && playerDeck.length === 0) {
             this.endRound();
         }
@@ -161,4 +164,25 @@ export class GameState {
         copy.isPassed = this.isPassed;
         return copy;
     }
+}
+
+
+function gameStateOfOneSuit(suit) {
+    if (!suits.includes(suit)) {
+        throw new Error('Incorrect suit');
+    }
+    let otherSuit;
+    while (suit === (otherSuit = suits[Math.floor(Math.random() * suits.length)])) {
+    }
+    return new GameState(suit, otherSuit);
+}
+
+export function getGameState() {
+    let userSuit = suits[Math.floor(Math.random() * suits.length)];
+    let gameState = gameStateOfOneSuit(userSuit);
+    gameState.message = <div>
+        <div>{`You'll play with '${userSuit}' suit`}</div>
+        <div>{`Bot will play with '${gameState.player2Suit}' suit`}</div>
+    </div>;
+    return gameState;
 }
