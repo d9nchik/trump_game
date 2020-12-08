@@ -43,32 +43,16 @@ class AppContainer extends Component {
 
     render() {
         const {player2, player1, board, out, message} = this.state.gameState;
-        if (this.state.gameState.isEnd()) {
-            return (
-                <div>
-                    <h1>{this.state.gameState.isFirstWinner() ? 'Congratulation you win!' : 'Sorry, you lose'}</h1>
-                    <button onClick={this.restart}>Play again!</button>
-                    <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
-                        <DeckContainer
-                            myBoard={[...player1]}
-                            opponentBoard={[...player2]}
-                            out={out}
-                            makeTurn={() => {
-                            }}
-                            board={[...board]}
-                            boardXoffset={375} // X axis pixel offset for dealing board
-                            boardYoffset={200} // Y axis pixel offset for dealing board
-                            size={200} // card height in pixels
-                        />
-                    </div>
-                </div>
-            );
-        }
         return (
             <div>
-                <h1>{message}</h1>
+                <h1>{this.state.gameState.isEnd() ? (this.state.gameState.isFirstWinner() ?
+                    'Congratulation you win!' : 'Sorry, you lose') : message}</h1>
                 <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
-                    <button onClick={this.pass}>Pass</button>
+                    {
+                        this.state.gameState.isEnd() ? <button onClick={this.restart}>Play again!</button> :
+                            <button onClick={this.pass}>Pass</button>
+                    }
+
                     <DeckContainer
 
                         myBoard={[...player1]}
