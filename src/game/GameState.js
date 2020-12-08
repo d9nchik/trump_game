@@ -53,6 +53,7 @@ export class GameState {
         this.isTurnOfFirst = true;
         this.isPassed = false;
         this.giveCards();
+        this.message = '';
     }
 
     giveCards() {
@@ -63,6 +64,7 @@ export class GameState {
         while (second.length < 6 && this.deck.length > 0) {
             second.push(this.deck.pop());
         }
+        this.message = 'Cards has been given';
     }
 
     isAttackerMiniTurn() {
@@ -85,6 +87,7 @@ export class GameState {
 
         playerDeck.splice(playerDeck.indexOf(card), 1);
         this.board.push(card);
+        this.message = `${!this.isFirstPlayerMiniTurn() ? 'First' : 'Second'} player has gone with card: '${card}'`;
         if (!isAttackerMiniTurn && playerDeck.length === 0) {
             this.endRound();
         }
@@ -116,6 +119,7 @@ export class GameState {
         } else {
             this.isPassed = true;
         }
+        this.message = `${!this.isFirstPlayerMiniTurn() ? 'First' : 'Second'} player has passed`
     }
 
     endRound() {

@@ -38,22 +38,24 @@ class AppContainer extends Component {
     }
 
     render() {
-        const {player2, player1, board, out} = this.state.gameState;
+        const {player2, player1, board, out, message} = this.state.gameState;
         return (
-            <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
-                <button onClick={this.pass}>Pass</button>
-                <DeckContainer
+            <div>
+                <h1>{message}</h1>
+                <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
+                    <button onClick={this.pass}>Pass</button>
+                    <DeckContainer
 
-                    myBoard={[...player1]}
-                    opponentBoard={[...player2]}
-                    out={out}
-                    makeTurn={card => this.makeTurn(card)}
-                    board={[...board]}
-                    boardXoffset={375} // X axis pixel offset for dealing board
-                    boardYoffset={200} // Y axis pixel offset for dealing board
-                    size={200} // card height in pixels
-                />
-
+                        myBoard={[...player1]}
+                        opponentBoard={[...player2]}
+                        out={out}
+                        makeTurn={card => this.makeTurn(card)}
+                        board={[...board]}
+                        boardXoffset={375} // X axis pixel offset for dealing board
+                        boardYoffset={200} // Y axis pixel offset for dealing board
+                        size={200} // card height in pixels
+                    />
+                </div>
             </div>
         );
     }
