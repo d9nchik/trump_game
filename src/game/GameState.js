@@ -77,6 +77,9 @@ export class GameState {
     }
 
     makeTurn(card) {
+        if (this.isEnd()) {
+            throw new Error('Game over');
+        }
         let isAttackerMiniTurn = this.isAttackerMiniTurn();
         const isFirstPlayerMiniTurn = this.isFirstPlayerMiniTurn();
         const [playerDeck, playerSuit] = isFirstPlayerMiniTurn ? [this.player1, this.player1Suit] : [this.player2, this.player2Suit];

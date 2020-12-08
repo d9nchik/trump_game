@@ -1,8 +1,8 @@
 export function makeTurn(gameState) {
-    if (gameState.isFirstPlayerMiniTurn()) {
+    if (gameState.isFirstPlayerMiniTurn() && gameState.isEnd()) {
         return;
     }
-    while (!gameState.isFirstPlayerMiniTurn()) {
+    while (!gameState.isFirstPlayerMiniTurn() && !gameState.isEnd()) {
         if (gameState.deck.length === 0 && (gameState.player1.length + gameState.player2.length < 10)) {
             endOfGameStrategy(gameState);
         } else {
@@ -88,6 +88,7 @@ function endOfGameStrategy(gameState) {
     }
     try {
         gameState.pass();
+        return;
     } catch (e) {
     }
     gameState.makeTurn(ourCards[0]);

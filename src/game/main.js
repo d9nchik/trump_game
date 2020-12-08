@@ -1,4 +1,3 @@
-// import Deck from "react-poker/dist/react-poker";
 import {Component} from "react/cjs/react.production.min";
 import DeckContainer from "../cardComponents/Deck";
 import {GameState} from "./GameState";
@@ -10,6 +9,7 @@ class AppContainer extends Component {
         super(props);
         this.state = {gameState: new GameState('c', 's')};
         this.pass = this.pass.bind(this);
+        this.restart = this.restart.bind(this);
     }
 
     componentDidMount() {
@@ -25,7 +25,7 @@ class AppContainer extends Component {
         if (!this.state.gameState.isFirstPlayerMiniTurn()) {
             makeTurn(this.state.gameState);
         }
-        this.forceUpdate();
+        // this.forceUpdate();
         this.setState({});
     }
 
@@ -37,8 +37,33 @@ class AppContainer extends Component {
         this.setState({});
     }
 
+    restart() {
+        this.setState({gameState: new GameState('c', 's')})
+    }
+
     render() {
         const {player2, player1, board, out, message} = this.state.gameState;
+        if (this.state.gameState.isEnd()) {
+            return (
+                <div>
+                    <h1>{this.state.gameState.isFirstWinner() ? 'Congratulation you win!' : 'Sorry, you lose'}</h1>
+                    <button onClick={this.restart}>Play again!</button>
+                    <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
+                        <DeckContainer
+                            myBoard={[...player1]}
+                            opponentBoard={[...player2]}
+                            out={out}
+                            makeTurn={() => {
+                            }}
+                            board={[...board]}
+                            boardXoffset={375} // X axis pixel offset for dealing board
+                            boardYoffset={200} // Y axis pixel offset for dealing board
+                            size={200} // card height in pixels
+                        />
+                    </div>
+                </div>
+            );
+        }
         return (
             <div>
                 <h1>{message}</h1>
