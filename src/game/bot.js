@@ -3,7 +3,11 @@ export function makeTurn(gameState) {
         return;
     }
     while (!gameState.isFirstPlayerMiniTurn()) {
-        simpleTurn(gameState);
+        if (gameState.deck.length === 0 && (gameState.player1.length + gameState.player2.length < 10)) {
+            endOfGameStrategy(gameState);
+        } else {
+            simpleTurn(gameState);
+        }
     }
 }
 
@@ -69,6 +73,81 @@ function sortFunction([number1, suit1], [number2, suit2], suit) {
     return ranks.indexOf(number1) < ranks.indexOf(number2) ? -1 : 1;
 }
 
-function endOfGame(gameState) {
+function endOfGameStrategy(gameState) {
+    let ourCards = gameState.player2;
+    for (const ourCard of ourCards) {
+        try {
+            let copy = gameState.copy();
+            copy.makeTurn(ourCard);
+            if (recursiveCall(copy)) {
+                gameState.makeTurn(ourCard);
+                return;
+            }
+        } catch (e) {
+        }
+    }
+    try {
+        gameState.pass();
+    } catch (e) {
+    }
+    gameState.makeTurn(ourCards[0]);
+}
 
+function minStrategy(gameState) {
+
+    let ourCards = gameState.player1;
+    for (const ourCard of ourCards) {
+        try {
+            let copy = gameState.copy();
+            copy.makeTurn(ourCard);
+            if (!recursiveCall(copy)) {
+                return false;
+            }
+        } catch (e) {
+        }
+    }
+
+    try {
+        let copy = gameState.copy();
+        copy.pass();
+        if (!recursiveCall(copy)) {
+            return false;
+        }
+    } catch (e) {
+    }
+
+    return true;
+}
+
+function maxStrategy(gameState) {
+    let ourCards = gameState.player2;
+    for (const ourCard of ourCards) {
+        try {
+            let copy = gameState.copy();
+            copy.makeTurn(ourCard);
+            if (recursiveCall(copy)) {
+                return true;
+            }
+        } catch (e) {
+        }
+    }
+
+    try {
+        let copy = gameState.copy();
+        copy.pass();
+        if (recursiveCall(copy)) {
+            return true;
+        }
+    } catch (e) {
+    }
+
+    return false;
+}
+
+function recursiveCall(gameStateCopy) {
+    if (gameStateCopy.isEnd()) {
+        return !gameStateCopy.isFirstWinner();
+    }
+
+    return gameStateCopy.isFirstPlayerMiniTurn() ? minStrategy(gameStateCopy) : maxStrategy(gameStateCopy);
 }
