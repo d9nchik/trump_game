@@ -68,3 +68,7 @@ function sortFunction([number1, suit1], [number2, suit2], suit) {
     }
     return ranks.indexOf(number1) < ranks.indexOf(number2) ? -1 : 1;
 }
+
+function endOfGame(gameState) {
+
+}

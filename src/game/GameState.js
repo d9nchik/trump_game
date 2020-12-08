@@ -53,7 +53,7 @@ export class GameState {
         this.isTurnOfFirst = true;
         this.isPassed = false;
         this.giveCards();
-        this.message = '';
+        this.message = 'Your turn';
     }
 
     giveCards() {
@@ -141,5 +141,17 @@ export class GameState {
 
     isEnd() {
         return this.deck.length === 0 && (this.player1.length === 0 || this.player2.length === 0);
+    }
+
+    copy() {
+        let copy = new GameState(this.player1Suit, this.player2Suit);
+        copy.player1 = [...this.player1];
+        copy.player2 = [...this.player2];
+        copy.board = [this.board];
+        copy.deck = [this.deck];
+        copy.out = [this.out];
+        copy.isTurnOfFirst = [this.out];
+        copy.isPassed = [this.out]
+        return copy;
     }
 }
