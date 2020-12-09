@@ -189,6 +189,6 @@ export function getGameState() {
     return gameState;
 }
 
-function getSymbolSuitFromSuitName(suit) {
+export function getSymbolSuitFromSuitName(suit) {
     return suitUnicode[suits.indexOf(suit)];
 }
