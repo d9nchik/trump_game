@@ -42,11 +42,13 @@ class AppContainer extends Component {
     }
 
     render() {
-        const {player2, player1, board, out, message} = this.state.gameState;
+        const {player2, player1, board, out, message, deck} = this.state.gameState;
         return (
             <div>
                 <h1>{this.state.gameState.isEnd() ? (this.state.gameState.isFirstWinner() ?
-                    'Congratulation you win!' : 'Sorry, you lose') : message}</h1>
+                    'Congratulation you win!🥳' : 'Sorry, you lose😭') : message}
+                    <br/>
+                    {`Card left: ${deck.length}`}</h1>
                 <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
                     {
                         this.state.gameState.isEnd() ? <button onClick={this.restart}>Play again!</button> :
