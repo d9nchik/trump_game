@@ -18,6 +18,8 @@ function shuffle(array) {
     return copy;
 }
 
+const suitUnicode = ['♦️', '♣️', '♥️', '♠️']
+
 const suits = ["d", "c", "h", "s"];
 const ranks = [
     "6",
@@ -92,7 +94,7 @@ export class GameState {
         this.board.push(card);
         this.message = <div>
             <div>{`${!this.isFirstPlayerMiniTurn() ? 'First' : 'Second'} player has gone with card:`}</div>
-            <div>{`'${card}'`}</div>
+            <div>{`'${card.slice(0, card.length - 1) + getSymbolSuitFromSuitName(card[card.length - 1])}'`}</div>
         </div>;
         if (!isAttackerMiniTurn && playerDeck.length === 0) {
             this.endRound();
@@ -181,8 +183,12 @@ export function getGameState() {
     let userSuit = suits[Math.floor(Math.random() * suits.length)];
     let gameState = gameStateOfOneSuit(userSuit);
     gameState.message = <div>
-        <div>{`You'll play with '${userSuit}' suit`}</div>
-        <div>{`Bot will play with '${gameState.player2Suit}' suit`}</div>
+        <div>{`You'll play with '${getSymbolSuitFromSuitName(userSuit)}' suit`}</div>
+        <div>{`Bot will play with '${getSymbolSuitFromSuitName(gameState.player2Suit)}' suit`}</div>
     </div>;
     return gameState;
+}
+
+function getSymbolSuitFromSuitName(suit) {
+    return suitUnicode[suits.indexOf(suit)];
 }
