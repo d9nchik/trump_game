@@ -3,7 +3,7 @@ export function makeTurn(gameState) {
         return;
     }
     while (!gameState.isFirstPlayerMiniTurn() && !gameState.isEnd()) {
-        if (gameState.deck.length === 0 && (gameState.player1.length + gameState.player2.length < 10)) {
+        if (gameState.deck.length === 0) {
             endOfGameStrategy(gameState);
         } else {
             simpleTurn(gameState);
@@ -73,6 +73,8 @@ function sortFunction([number1, suit1], [number2, suit2], suit) {
     return ranks.indexOf(number1) < ranks.indexOf(number2) ? -1 : 1;
 }
 
+let deepOfMind = 30;
+
 function endOfGameStrategy(gameState) {
     let ourCards = gameState.player2;
     for (const ourCard of ourCards) {
@@ -83,6 +85,14 @@ function endOfGameStrategy(gameState) {
                 gameState.makeTurn(ourCard);
                 return;
             }
+        } catch (e) {
+        }
+    }
+    ourCards.sort((a, b) => sortFunction(a, b, gameState.player2Suit));
+    for (const ourCard of ourCards) {
+        try {
+            gameState.makeTurn(ourCard);
+            return;
         } catch (e) {
         }
     }
@@ -146,9 +156,11 @@ function maxStrategy(gameState) {
 }
 
 function recursiveCall(gameStateCopy) {
-    if (gameStateCopy.isEnd()) {
+    if (gameStateCopy.isEnd() || deepOfMind) {
         return !gameStateCopy.isFirstWinner();
     }
-
-    return gameStateCopy.isFirstPlayerMiniTurn() ? minStrategy(gameStateCopy) : maxStrategy(gameStateCopy);
+    deepOfMind--;
+    let isSuccessful = gameStateCopy.isFirstPlayerMiniTurn() ? minStrategy(gameStateCopy) : maxStrategy(gameStateCopy);
+    deepOfMind++;
+    return isSuccessful;
 }
