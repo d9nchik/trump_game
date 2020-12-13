@@ -25,12 +25,16 @@ class AppContainer extends Component {
         if (!this.state.gameState.isFirstPlayerMiniTurn()) {
             makeTurn(this.state.gameState);
         }
-        // this.forceUpdate();
         this.setState({});
     }
 
     pass() {
-        this.state.gameState.pass();
+        try {
+            this.state.gameState.pass();
+        } catch (e) {
+            alert(e);
+        }
+
         if (!this.state.gameState.isFirstPlayerMiniTurn()) {
             makeTurn(this.state.gameState);
         }
