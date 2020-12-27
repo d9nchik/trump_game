@@ -39,27 +39,29 @@ class CardContainer extends Component {
         this.flipCard = this.flipCard.bind(this);
     }
 
-    componentDidUpdate({board, card, index}) {
+    componentWillReceiveProps(nextProps) {
+        const nextBoard = nextProps.board;
+        const currBoard = this.props.board;
+        const card = this.props.card.rank + this.props.card.suit;
+        const isNewBoardCard = this.isNewBoardCard(currBoard, nextBoard, card);
+
+        if (isNewBoardCard) {
+            const flipDelayScale = 1 / (1 + nextBoard.indexOf(card)) / 10 + 1; // delay based on distance to travel to board
+            setTimeout(() => this.flipCard(), 500 * flipDelayScale);
+        }
+
+        if (nextBoard.length === 0 && currBoard.includes(card)) {
+            this.flipCard();
+        }
+    }
+
+    componentWillUpdate({board, card, index}) {
         const cardValue = card.rank + card.suit;
         const boardIndex = board.indexOf(cardValue);
         this.setState({
             boardCard: boardIndex !== -1,
             zIndex: boardIndex === -1 ? 1 : boardIndex + 1
         });
-
-        const nextBoard = board;
-        const currBoard = this.props.board;
-        const cardNew = this.props.card.rank + this.props.card.suit;
-        const isNewBoardCard = this.isNewBoardCard(currBoard, nextBoard, cardNew);
-
-        if (isNewBoardCard) {
-            const flipDelayScale = 1 / (1 + nextBoard.indexOf(cardNew)) / 10 + 1; // delay based on distance to travel to board
-            setTimeout(() => this.flipCard(), 500 * flipDelayScale);
-        }
-
-        if (nextBoard.length === 0 && currBoard.includes(cardNew)) {
-            this.flipCard();
-        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
