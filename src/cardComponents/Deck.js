@@ -34,10 +34,6 @@ const stack = i => ({
 const suits = ["d", "c", "h", "s"];
 const ranks = [
   "A",
-  "2",
-  "3",
-  "4",
-  "5",
   "6",
   "7",
   "8",
@@ -56,27 +52,97 @@ const getInitialDeck = () =>
 class DeckContainer extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {board: [], deck: []};
+    this.state = {
+      board: [], deck: [], opponentBoard: [], out: [], myBoard: [], makeTurn: card => {
+      }
+    };
   }
 
   componentDidUpdate(nextProps) {
     if (nextProps.board) {
       this.setState({board: nextProps.board});
     }
+    if (nextProps.opponentBoard) {
+      this.setState({opponentBoard: nextProps.opponentBoard});
+    }
+    if (nextProps.myBoard) {
+      this.setState({myBoard: nextProps.myBoard});
+    }
+    if (nextProps.makeTurn) {
+      this.setState({makeTurn: nextProps.makeTurn});
+    }
+    if (nextProps.out) {
+      this.setState({out: nextProps.out})
+    }
   }
 
   render() {
-    const {board} = this.state;
+    const {board, opponentBoard, myBoard, makeTurn, out} = this.state;
     const {size, flipOnHover, boardYoffset, boardXoffset} = this.props;
 
     return (
         <div>
           {getInitialDeck().map((card, i) => {
+            if (opponentBoard.includes(card.rank + card.suit)) {
+              return (
+                    <CardContainer
+                        index={i}
+                        // key={card.rank + card.suit}
+                        board={opponentBoard}
+                        card={card}
+                        faceDown={true}
+                        size={size}
+                        boardXoffset={boardXoffset} // board x offset relative to stack
+                        boardYoffset={-boardYoffset} // board y offset relative to stack
+                        mapXYZ={stack}
+                        flipOnHover={false}
+                    />
+              );
+            }
+            if (myBoard.includes(card.rank + card.suit)) {
+              return (
+                  <div onClick={() => makeTurn(card.rank + card.suit)}
+                      // key={card.rank + card.suit}
+                  >
+                    <CardContainer
+                        index={i}
+                        // key={card.rank + card.suit}
+                        board={myBoard}
+                        card={card}
+                        faceDown={false}
+                        size={size}
+                        boardXoffset={-boardXoffset / 2} // board x offset relative to stack
+                        boardYoffset={2 * boardYoffset} // board y offset relative to stack
+                        mapXYZ={stack}
+                        flipOnHover={flipOnHover}
+                    />
+                  </div>
+              );
+            }
+            if (out.includes(card.rank + card.suit)) {
+              return (<div/>);
+            }
+            if (board.includes(card.rank + card.suit)) {
+              return (
+                  <CardContainer
+                      index={i}
+                      key={card.rank + card.suit}
+                      board={board}
+                      card={card}
+                      faceDown={false}
+                      size={size}
+                      boardXoffset={boardXoffset} // board x offset relative to stack
+                      boardYoffset={0} // board y offset relative to stack
+                      mapXYZ={stack}
+                      flipOnHover={true}
+                  />
+              );
+            }
             return (
                 <CardContainer
                     index={i}
                     key={card.rank + card.suit}
-                    board={board}
+                    board={myBoard}
                     card={card}
                     faceDown={true}
                     size={size}

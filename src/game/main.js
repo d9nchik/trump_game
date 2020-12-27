@@ -1,116 +1,81 @@
-// import Deck from "react-poker/dist/react-poker";
 import {Component} from "react/cjs/react.production.min";
 import DeckContainer from "../cardComponents/Deck";
+import {getGameState, getSymbolSuitFromSuitName} from "./GameState";
+import {makeTurn} from "./bot";
 
-const range = (start, count) =>
-    Array.apply(0, Array(count)).map((element, index) => {
-        return index + start;
-    });
-
-function shuffle(array) {
-    const copy = [];
-    let n = array.length;
-    let i;
-    // While there remain elements to shuffle…
-    while (n) {
-        // Pick a remaining element…
-        i = Math.floor(Math.random() * array.length);
-
-        // If not already shuffled, move it to the new array.
-        if (i in array) {
-            copy.push(array[i]);
-            delete array[i];
-            n--;
-        }
-    }
-
-    return copy;
-}
-
-const suits = ["d", "c", "h", "s"];
-const ranks = [
-    "A",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "J",
-    "Q",
-    "K"
-];
-
-const getDeck = () =>
-    shuffle(
-        ranks
-            .map(r => suits.map(s => r + s))
-            .reduce((prev, curr) => prev.concat(curr))
-    );
 
 class AppContainer extends Component {
     constructor(props) {
         super(props);
-        this.state = { board: [], deck: getDeck() };
-        this.progressDeal = this.progressDeal.bind(this);
+        this.state = {gameState: getGameState()};
+        this.pass = this.pass.bind(this);
+        this.restart = this.restart.bind(this);
     }
 
-    newRound() {
-        const { deck, board } = this.state;
-
-        const newDeck = getDeck();
-        this.setState(Object.assign({}, { board: [], deck: newDeck }));
+    componentDidMount() {
+        this.setState({});
     }
 
-    dealFlop() {
-        const { deck, board } = this.state;
-        const flop = range(0, 3).map(e => deck.pop());
-
-        this.setState(Object.assign({}, { board: flop, deck }));
+    makeTurn(card) {
+        try {
+            this.state.gameState.makeTurn(card);
+        } catch (e) {
+            alert(e);
+        }
+        if (!this.state.gameState.isFirstPlayerMiniTurn()) {
+            makeTurn(this.state.gameState);
+        }
+        this.setState({});
     }
 
-    dealCard() {
-        const { deck, board } = this.state;
-        const card = deck.pop();
-
-        this.setState(Object.assign({}, { deck, board: board.concat(card) }));
-    }
-
-    progressDeal() {
-        const { deck, board } = this.state;
-
-        if (board.length === 0) {
-            this.dealFlop();
-            // return;
+    pass() {
+        try {
+            this.state.gameState.pass();
+        } catch (e) {
+            alert(e);
         }
 
-        if (board.length === 5) {
-            this.newRound();
-        } else {
-            this.dealCard();
+        if (!this.state.gameState.isFirstPlayerMiniTurn()) {
+            makeTurn(this.state.gameState);
         }
+        this.setState({});
+    }
+
+    restart() {
+        this.setState({gameState: getGameState()})
     }
 
     render() {
-        const { board } = this.state;
-
+        const {player2, player1, board, out, message, deck, player1Suit, player2Suit} = this.state.gameState;
         return (
-            <div style={{left: "10vw", top: "10vh", position: "absolute"}}>
-                <button
-                    style={{padding: "1.5em", margin: "2em"}}
-                    onClick={this.progressDeal}
-                >
-                    Deal
-                </button>
-                <DeckContainer
-                    board={board}
-                    boardXoffset={375} // X axis pixel offset for dealing board
-                    boardYoffset={200} // Y axis pixel offset for dealing board
-                    size={200} // card height in pixels
-                />
+            <div>
+                <h1>{this.state.gameState.isEnd() ? (this.state.gameState.isFirstWinner() ?
+                    'Congratulation you win!🥳' : 'Sorry, you lose😭') : message}
+                    <br/>
+                    {`Card left: ${deck.length}`}
+                    <br/>
+                    {`Your ${getSymbolSuitFromSuitName(player1Suit)}`}
+                    <br/>
+                    {`Bot ${getSymbolSuitFromSuitName(player2Suit)}`}
+                </h1>
+                <div style={{left: "10vw", top: "20vh", position: "absolute"}}>
+                    {
+                        this.state.gameState.isEnd() ? <button onClick={this.restart}>Play again!</button> :
+                            <button onClick={this.pass}>Pass</button>
+                    }
+
+                    <DeckContainer
+
+                        myBoard={[...player1]}
+                        opponentBoard={[...player2]}
+                        out={out}
+                        makeTurn={card => this.makeTurn(card)}
+                        board={[...board]}
+                        boardXoffset={375} // X axis pixel offset for dealing board
+                        boardYoffset={200} // Y axis pixel offset for dealing board
+                        size={200} // card height in pixels
+                    />
+                </div>
             </div>
         );
     }
